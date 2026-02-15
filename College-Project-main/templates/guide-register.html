@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Guide Registration | Travel India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/guide-register.css') }}">
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/guide-register.js') }}" defer></script>
+</head>
+
+<body class="guide-register-page">
+  <div class="guide-register-wrapper">
+    <div class="guide-register-box">
+      <div class="auth-header">
+        <div class="logo">Travel<span>India</span></div>
+        <div class="subtitle">Guide Registration</div>
+        <div class="auth-badge"><i class="fas fa-star"></i> Become a Tour Guide</div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, msg in messages %}
+      <div class="flash {{ category }}">{{ msg }}</div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      <form class="guide-register-form" method="POST" id="guideRegisterForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Full Name *</label>
+            <input type="text" name="full_name" placeholder="Your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Email Address *</label>
+            <input type="email" name="email" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> Phone *</label>
+            <input type="tel" id="phoneInput" name="phone" maxlength="10" inputmode="numeric" placeholder="Enter your phone number">
+      <span class="phone-error" id="phoneError" placeholder="Contact number" required>
+          </div>
+
+          <div class="form-group">
+       <label><i class="fas fa-map-marker-alt"></i> Assigned Destination *</label>
+<select name="assigned_destination" required>
+  <option value="">Select Destination</option>
+
+  {% for dest in destinations %}
+    <option value="{{ dest }}">{{ dest }}</option>
+  {% endfor %}
+
+</select>
+</div>
+
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Password *</label>
+            <input type="password" name="password" placeholder="••••••••" required minlength="4">
+          </div>
+        </div>
+
+        <button type="submit" class="guide-register-submit">
+          <i class="fas fa-user-plus"></i> Create Guide Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="{{ url_for('guide_login') }}">Sign in here</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

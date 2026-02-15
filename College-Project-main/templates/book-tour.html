@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Book Tour | Travel India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/book-tour.css') }}">
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/book-tour.js') }}" defer></script>
+</head>
+
+<body class="has-navbar">
+  <nav class="navbar">
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </div>
+    <a href="{{ url_for('index') }}" class="logo">Travel<span>India</span></a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}#home">Home</a>
+      <a href="{{ url_for('index') }}#destinations" class="active">Destinations</a>
+      <a href="{{ url_for('more_places') }}">More Places</a>
+      <a href="{{ url_for('index') }}#about">About</a>
+      <!-- Mobile Login Button -->
+      <a href="{{ url_for('login') }}" class="nav-login" id="mobileNavLogin">Login</a>
+    </div>
+    <div class="nav-right">
+      <a href="{{ url_for('login') }}" class="nav-login" id="navLogin" style="display: inline-block;">Login</a>
+      <div class="user-profile" id="userProfile" style="display: none;" onclick="toggleDropdown()">
+        <i class="fas fa-user-circle"></i>
+        <div class="dropdown" id="profileDropdown">
+          <a href="{{ url_for('profile') }}">My Account</a>
+          <a href="{{ url_for('logout') }}" id="logoutBtn">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="book-tour-main">
+    <div class="breadcrumb">
+      <a href="{{ url_for('index') }}">Home</a>
+      <span class="sep">/</span>
+      <a href="{{ url_for('destination', name=destination) }}">{{ destination }}</a>
+      <span class="sep">/</span>
+      <span>Book Tour</span>
+    </div>
+
+    <h1 class="book-tour-title reveal">Book Your Tour</h1>
+
+    <div class="tour-info-box tour-info-reveal">
+      <h2><i class="fas fa-route"></i> {{ tour_name }}</h2>
+      <p class="tour-dest">Destination: <strong>{{ destination }}</strong></p>
+      <p class="tour-price">Price: <strong>{{ tour_price }}</strong></p>
+    </div>
+
+    <p class="book-form-intro reveal">Fill in your details below to book this tour. After booking, please check your
+      profile for confirmation and status updates..</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, msg in messages %}
+    <div class="flash {{ category }}">{{ msg }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% if booking_success %}
+    <div class="booking-success"
+      style="text-align: center; padding: 50px 40px; margin: 40px auto; background: linear-gradient(135deg, #f0fdf4, #dbeafe); border: 2px solid #22c55e; border-radius: 12px; max-width: 600px;">
+      <i class="fas fa-check-circle" style="font-size: 70px; color: #22c55e; margin-bottom: 20px; display: block;"></i>
+      <h2 style="color: #166534; margin-bottom: 20px; font-size: 28px;">Tour Successfully Booked!</h2>
+      <p style="color: #15803d; font-size: 16px; margin: 15px 0;">Your tour has been Successfully booked and is
+        currently awaiting confirmation. Please check your <a href="{{ url_for('profile') }}"
+          style="color: #0ea5e9; text-decoration: underline; font-weight: 600;">Profile</a> for the latest status
+        updates.</p>
+      <p style="color: #16a34a; margin-top: 25px; font-size: 13px;">Thank you for booking with us!</p>
+    </div>
+    {% else %}
+    <form class="book-tour-form form-reveal" method="post" action="{{ url_for('book_tour') }}">
+      <input type="hidden" name="destination" value="{{ destination }}">
+      <input type="hidden" name="tour_name" value="{{ tour_name }}">
+      <input type="hidden" name="tour_price" value="{{ tour_price }}">
+      <label>Your Name *</label>
+      <input type="text" name="name" required placeholder="Full name">
+      <label>Email *</label>
+      <input type="email" name="email" required placeholder="your@email.com">
+      <label>Select Preferred Date</label>
+      <input type="date" name="preferred_date" required>
+      <label>Phone *</label>
+      <input type="tel" id="phoneInput" name="phone" required placeholder="10-digit mobile" maxlength="10" inputmode="numeric">
+      <span class="phone-error" id="phoneError"></span>
+      <label>Number of Persons *</label>
+      <input type="number" name="persons" min="1" max="20" value="1" required>
+      <button type="submit" class="book-tour-submit">Submit Booking</button>
+    </form>
+    {% endif %}
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <a href="{{ url_for('index') }}">← Back to Home</a> &nbsp;|&nbsp; © 2026 TravelIndia. All rights reserved.
+    </div>
+  </footer>
+  <script>
+    (function () {
+      function reveal() {
+        document.querySelectorAll('.book-tour-main .reveal').forEach(function (el) { el.classList.add('active'); });
+        setTimeout(function () {
+          document.querySelectorAll('.tour-info-reveal, .book-form-intro').forEach(function (el) { el.classList.add('reveal-active'); });
+          setTimeout(function () {
+            document.querySelectorAll('.form-reveal').forEach(function (el) { el.classList.add('reveal-active'); });
+          }, 300);
+        }, 200);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', reveal);
+      else reveal();
+    })();
+  </script>
+  <script src="{{ url_for('static', filename='js/phone-validation.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/success-bar.js') }}" defer></script>
+</body>
+
+</html>

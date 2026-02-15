@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel India | Information</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+body{
+  display:flex;
+  min-height:100vh;
+  background:#0f172a;
+  overflow-x:hidden;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:260px;
+  background:linear-gradient(180deg,#1e293b,#0f172a);
+  padding:35px 10px;
+  color:#fff;
+  transition:0.3s ease;
+}
+
+.sidebar h2{
+  font-size:24px;
+  margin-bottom:40px;
+  text-align:center;       /* center text */
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.sidebar h2 span{
+  color:#facc15;
+}
+
+.sidebar a{
+  display:block;
+  padding:12px 15px;
+  border-radius:12px;
+  margin-bottom:12px;
+  text-decoration:none;
+  color:#cbd5e1;
+  transition:0.3s;
+  position:relative;
+  font-weight:500;
+}
+
+.sidebar a:hover{
+  background:#1e293b;
+  color:#fff;
+}
+
+.sidebar a.active{
+  background:rgba(250,204,21,0.15);
+  color:#facc15;
+  font-weight:600;
+}
+
+.sidebar a.active::before{
+  content:"";
+  position:absolute;
+  left:-20px;
+  top:0;
+  height:100%;
+  width:4px;
+  background:#facc15;
+  border-radius:4px;
+}
+
+/* ================= HAMBURGER ================= */
+.menu-toggle{
+  display:none;
+  position:fixed;
+  top:28px;
+  left:15px;
+  font-size:22px;
+  color:#fff;
+  background:#1e293b;
+  padding:10px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  z-index:1000;
+}
+
+/* ================= MAIN ================= */
+.main{
+  flex:1;
+  padding:60px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+/* ================= CARD ================= */
+.card{
+  background:#ffffff;
+  border-radius:20px;
+  padding:50px;
+  box-shadow:0 25px 60px rgba(0,0,0,0.25);
+  width:100%;
+  max-width:900px;
+  animation:fadeIn 0.4s ease;
+}
+
+.card h1{
+  font-size:28px;
+  margin-bottom:20px;
+  color:#0f172a;
+}
+
+.card p{
+  color:#334155;
+  line-height:1.8;
+  margin-bottom:15px;
+}
+
+.card ul{
+  margin-left:20px;
+  margin-bottom:20px;
+}
+
+.card li{
+  margin-bottom:8px;
+  color:#334155;
+}
+
+/* Sections */
+.content-section{
+  display:none;
+}
+
+.content-section.active{
+  display:block;
+}
+
+/* FAQ */
+.faq-item{
+  background:#f8fafc;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.faq-item strong{
+  display:block;
+  margin-bottom:6px;
+  color:#0f172a;
+}
+
+/* Back Button */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:30px;
+  padding:12px 22px;
+  border-radius:50px;
+  border:2px solid #facc15;
+  color:#facc15;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.back-btn:hover{
+  background:#facc15;
+  color:#0f172a;
+  box-shadow:0 8px 20px rgba(250,204,21,0.4);
+  transform:translateY(-2px);
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .main{
+    padding:30px;
+  }
+}
+
+@media(max-width:768px){
+
+  body{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    position:fixed;
+    left:-260px;
+    top:0;
+    height:100%;
+    z-index:999;
+  }
+
+  .sidebar.show{
+    left:0;
+  }
+
+  .menu-toggle{
+    display:block;
+  }
+
+  .main{
+    padding:80px 20px 20px 20px;
+  }
+
+  .card{
+    padding:25px;
+  }
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<div class="menu-toggle" onclick="toggleMenu()">
+  <i class="fa fa-bars"></i>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h2>Travel<span>India</span></h2>
+
+  <a href="#" class="active" onclick="showSection(event,'about')">About Us</a>
+  <a href="#" onclick="showSection(event,'services')">Services</a>
+  <a href="#" onclick="showSection(event,'privacy')">Privacy Policy</a>
+  <a href="#" onclick="showSection(event,'faq')">FAQ</a>
+  <a href="#" onclick="showSection(event,'contact')">Contact</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="card">
+
+    <section id="about" class="content-section active">
+      <h1>About Us</h1>
+      <p>TravelIndia connects travelers with verified local guides across India.</p>
+      <p>We focus on safe travel, authentic experiences, and seamless bookings.</p>
+    </section>
+
+    <section id="services" class="content-section">
+      <h1>Our Services</h1>
+      <ul>
+        <li>✔ Guided Tours</li>
+        <li>✔ Hotel Recommendations</li>
+        <li>✔ Destination Planning</li>
+        <li>✔ Verified Local Guides</li>
+        <li>✔ Secure Online Booking</li>
+      </ul>
+    </section>
+
+    <section id="privacy" class="content-section">
+      <h1>Privacy Policy</h1>
+      <p>Your personal data is securely stored and never shared without consent.</p>
+      <p>All transactions are encrypted using modern security standards.</p>
+    </section>
+
+    <section id="faq" class="content-section">
+      <h1>Frequently Asked Questions</h1>
+      <div class="faq-item">
+        <strong>How do I book a tour?</strong>
+        <p>Select your destination and click "Book Tour".</p>
+      </div>
+      <div class="faq-item">
+        <strong>Can I cancel my booking?</strong>
+        <p>Yes, cancellations are allowed within 24 hours.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="content-section">
+      <h1>Contact Us</h1>
+      <p><i class="fa fa-location-dot"></i> Mumbai, India</p>
+      <p><i class="fa fa-phone"></i> +91 98765 43210</p>
+      <p><i class="fa fa-envelope"></i> support@travelindia.com</p>
+      <p>We are available 24/7 for assistance.</p>
+    </section>
+
+    <a href="javascript:history.back()" class="back-btn">
+      <i class="fa fa-arrow-left"></i> Back
+    </a>
+
+  </div>
+</div>
+
+<script>
+function showSection(e,id){
+  e.preventDefault();
+
+  document.querySelectorAll('.sidebar a').forEach(link=>{
+    link.classList.remove('active');
+  });
+
+  e.target.classList.add('active');
+
+  document.querySelectorAll('.content-section').forEach(section=>{
+    section.classList.remove('active');
+  });
+
+  document.getElementById(id).classList.add('active');
+
+  if(window.innerWidth < 768){
+    document.getElementById('sidebar').classList.remove('show');
+  }
+}
+
+function toggleMenu(){
+  document.getElementById('sidebar').classList.toggle('show');
+}
+</script>
+
+</body>
+</html>

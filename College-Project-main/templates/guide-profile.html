@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Guide Profile | Travel India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/guide-profile.css') }}">
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/guide-profile.js') }}" defer></script>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">Travel<span>India</span></div>
+
+    <div class="menu">
+      <button class="menu-btn active" data-tab="personal">
+        <i class="fa fa-user"></i> Personal Info
+      </button>
+      <button class="menu-btn" data-tab="support">
+        <i class="fa fa-life-ring"></i> Help & Support
+      </button>
+    </div>
+    <button class="menu-btn logout" id="logoutBtn">
+      <i class="fa fa-sign-out-alt"></i> Logout
+    </button>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, msg in messages %}
+    <div class="flash-message {{ category }}">
+      <i class="fa {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }}"></i>
+      {{ msg }}
+      <button class="flash-close" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- PERSONAL INFO -->
+    <section class="card {% if active_tab == 'personal' %}active{% endif %}" id="personal">
+      <div class="card-header">
+        <i class="fa fa-user"></i> Personal Information
+      </div>
+      <div class="card-body">
+        <form method="POST" class="profile-form">
+          <div class="info-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="full_name" placeholder="Enter your full name" value="{{ guide.full_name or '' }}">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" value="{{ guide.email }}" disabled class="disabled-input">
+              <small>Email cannot be changed</small>
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" id="phoneInput" name="phone" maxlength="10" inputmode="numeric" placeholder="Enter your phone number" value="{{ guide.phone or '' }}">
+              <span class="phone-error" id="phoneError"></span>
+            </div>
+            <div class="form-group">
+              <label>Assigned Destination</label>
+              <input type="text" value="{{ guide.assigned_destination }}" disabled class="disabled-input">
+              <small>Destination is assigned by admin</small>
+            </div>
+          </div>
+          <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section class="card {% if active_tab == 'support' %}active{% endif %}" id="support">
+      <div class="card-header">
+        <i class="fa fa-life-ring"></i> Help & Support
+      </div>
+      <div class="card-body">
+        <div class="support-item">
+          <i class="fa fa-envelope"></i> support@travelindia.com
+        </div>
+        <div class="support-item">
+          <i class="fa fa-phone"></i> +91 98765 43210
+        </div>
+        <div class="support-item">
+          <i class="fa fa-clock"></i> Mon–Fri, 9AM–6PM IST
+        </div>
+      </div>
+    </section>
+     <a href="{{ url_for('guide_dashboard') }}" class="back-home">
+  ⬅ Back
+</a>
+
+  </main>
+</body>
+
+</html>

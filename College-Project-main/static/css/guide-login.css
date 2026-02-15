@@ -1,0 +1,181 @@
+/* GUIDE LOGIN PAGE */
+.guide-login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.guide-login-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.85);
+}
+
+.guide-login-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+}
+
+.guide-login-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.guide-login-back:hover {
+  color: #ffd700;
+}
+
+.guide-login-box {
+  background: rgba(30, 41, 59, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  transition: 0.3s ease;
+}
+
+.guide-login-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+}
+
+.guide-login-box h1 {
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.guide-login-sub {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.guide-login-form .form-group {
+  margin-bottom: 20px;
+}
+
+.guide-login-form label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #e2e8f0;
+}
+
+.guide-login-form input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #fff;
+  font-size: 16px;
+}
+
+.guide-login-form input:focus {
+  outline: none;
+  border-color: #ffd700;
+}
+
+.guide-login-submit {
+  width: 100%;
+  padding: 16px;
+  background: #ffd700;
+  color: #020617;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.guide-login-submit:hover {
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+.guide-login-hint {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #64748b;
+  text-align: center;
+}
+
+.guide-login-hint a {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+.guide-login-hint a:hover {
+  text-decoration: underline;
+}
+
+/* Divider "or" line */
+.guide-divider {
+  text-align: center;
+  margin: 28px 0 18px;
+  font-size: 13px;
+  color: #94a3b8;
+  position: relative;
+}
+
+.guide-divider::before,
+.guide-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.guide-divider::before {
+  left: 0;
+}
+
+.guide-divider::after {
+  right: 0;
+}
+
+/* Guide box */
+.guide-login-option-box {
+  background: linear-gradient(145deg, #0f172a, #111c3a);
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  color: #e2e8f0;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.4);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: 0.3s ease;
+}
+
+.guide-login-option-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+}
+
+@media (max-width: 768px) {
+  .guide-login-wrapper {
+    padding: 15px;
+  }
+
+  .guide-login-box {
+    padding: 24px;
+  }
+
+  .guide-login-form input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile | Travel India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/profile.js') }}" defer></script>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">Travel<span>India</span></div>
+
+    <div class="menu">
+      <button class="menu-btn active" data-tab="personal">
+        <i class="fa fa-user"></i> Personal Info
+      </button>
+      <button class="menu-btn" data-tab="bookings">
+        <i class="fa fa-ticket"></i> My Bookings
+      </button>
+      <button class="menu-btn" data-tab="support">
+        <i class="fa fa-life-ring"></i> Help & Support
+      </button>
+    </div>
+    <button class="menu-btn logout desktop-logout" id="logoutBtn">
+      <i class="fa fa-sign-out-alt"></i> Logout
+    </button>
+  </aside>
+  
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, msg in messages %}
+    <div class="flash-message {{ category }}">
+      <i class="fa {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }}"></i>
+      {{ msg }}
+      <button class="flash-close" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- PERSONAL INFO -->
+    <section class="card {% if active_tab == 'personal' %}active{% endif %}" id="personal">
+      <div class="card-header">
+        <i class="fa fa-user"></i> Personal Information
+      </div>
+      <div class="card-body">
+        <form method="POST" class="profile-form">
+          <div class="info-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="full_name" placeholder="Enter your full name" value="{{ user.full_name or '' }}">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" value="{{ user.email }}" disabled class="disabled-input">
+              <small>Email cannot be changed</small>
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" id="phoneInput" name="phone" maxlength="10" inputmode="numeric" placeholder="Enter your phone number" value="{{ user.phone or '' }}">
+              <span class="phone-error" id="phoneError"></span>
+            </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" name="dob" value="{{ user.dob or '' }}">
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select name="gender">
+                <option value="">Select Gender</option>
+                <option value="Male" {% if user.gender=='Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if user.gender=='Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if user.gender=='Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" name="city" placeholder="Enter your city" value="{{ user.city or '' }}">
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <input type="text" name="country" placeholder="Enter your country" value="{{ user.country or 'India' }}">
+            </div>
+          </div>
+          <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- BOOKINGS -->
+    <section class="card {% if active_tab == 'bookings' %}active{% endif %}" id="bookings">
+      <div class="card-header">
+        <i class="fa fa-ticket"></i> My Bookings
+      </div>
+      <div class="card-body">
+        {% if bookings %}
+        {% for b in bookings %}
+        <div class="booking"
+          style="background: linear-gradient(135deg, #f8fafc, #f0f9ff); border: 1px solid #e0e7ff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+            <div>
+              <h4 style="margin: 0 0 5px 0; color: #1e293b; font-size: 18px;"><i class="fas fa-map-location-dot"
+                  style="color: #0ea5e9; margin-right: 8px;"></i>{{ b.tour_name }}</h4>
+              <p style="margin: 0; color: #64748b; font-size: 14px;">{{ b.destination }}</p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 20px; color: #0ea5e9; font-weight: bold;">{{ b.tour_price }}</div>
+              {% if b.status == 'Confirmed' %}
+              <span style="background:#dcfce7;color:#166534;padding:4px 10px;border-radius:20px;font-size:12px;">
+                Confirmed
+              </span>
+              {% else %}
+              <span style="background:#fee2e2;color:#991b1b;padding:4px 10px;border-radius:20px;font-size:12px;">
+                Pending
+              </span>
+              {% endif %}
+            </div>
+          </div>
+          <div
+            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <div>
+              <label
+                style="display: block; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 600;"><i
+                  class="fas fa-calendar" style="margin-right: 5px;"></i>Travel Date</label>
+              <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 500;">{{ b.preferred_date }}</p>
+            </div>
+            <div>
+              <label
+                style="display: block; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 600;"><i
+                  class="fas fa-users" style="margin-right: 5px;"></i>Travelers</label>
+              <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 500;">{{ b.persons }} person{% if
+                b.persons != 1 %}s{% endif %}</p>
+            </div>
+            <div>
+              <label
+                style="display: block; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 600;"><i
+                  class="fas fa-envelope" style="margin-right: 5px;"></i>Email</label>
+              <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 500;">{{ b.email }}</p>
+            </div>
+            <div>
+              <label
+                style="display: block; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 600;"><i
+                  class="fas fa-phone" style="margin-right: 5px;"></i>Phone</label>
+              <p style="margin: 0; color: #1e293b; font-size: 15px; font-weight: 500;">{{ b.phone }}</p>
+            </div>
+          </div>
+          {% if b.tour_description %}
+          <div
+            style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; border-radius: 6px; margin-top: 12px;">
+            {% for line in b.tour_description.split('\n') %}
+            {% if line.strip() %}
+            <p style="margin: 0 0 10px 0; color: #0c4a6e; font-size: 14px; line-height: 1.6;">{{ line }}</p>
+            {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% if b.message %}
+          <div
+            style="background: #fef3c7; border-left: 3px solid #f59e0b; padding: 12px; border-radius: 5px; margin-top: 12px;">
+            <label
+              style="display: block; color: #92400e; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 600;"><i
+                class="fas fa-sticky-note" style="margin-right: 5px;"></i>Your Message</label>
+            <p style="margin: 0; color: #78350f; font-size: 14px;">{{ b.message }}</p>
+          </div>
+          {% endif %}
+          <div style="border-top: 1px solid #e2e8f0; margin-top: 15px; padding-top: 15px; text-align: right;">
+            <p style="margin: 0; color: #94a3b8; font-size: 12px;">Booked on: {{ b.created_at.strftime('%B %d, %Y') if
+              b.created_at else 'N/A' }}</p>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: #94a3b8;">
+          <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; display: block; color: #cbd5e1;"></i>
+          <p style="margin: 0; font-size: 16px;">No bookings yet.</p>
+          <p style="margin: 5px 0 0 0; font-size: 14px;"><a href="{{ url_for('index') }}"
+              style="color: #0ea5e9; text-decoration: none; font-weight: 600;">Explore destinations →</a></p>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section class="card {% if active_tab == 'support' %}active{% endif %}" id="support">
+      <div class="card-header">
+        <i class="fa fa-life-ring"></i> Help & Support
+      </div>
+      <div class="card-body">
+        <div class="support-item">
+          <i class="fa fa-envelope"></i> support@travelindia.com
+        </div>
+        <div class="support-item">
+          <i class="fa fa-phone"></i> +91 98765 43210
+        </div>
+        <div class="support-item">
+          <i class="fa fa-clock"></i> Mon–Fri, 9AM–6PM IST
+        </div>
+      </div>
+    </section>
+    <a href="{{ url_for('index') }}" class="back-home">
+  ⬅ Back
+</a>
+ <button class="mobile-logout" id="logoutBtnMobile">
+  <i class="fa fa-sign-out-alt"></i> Logout
+</button>
+
+  </main>
+
+  <script>
+    // Tabs
+    document.querySelectorAll('.menu-btn[data-tab]').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      };
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').onclick = () => {
+      if (confirm('Logout from IndiaTour?')) {
+        window.location.href = '/logout';
+      }
+    };
+    document.getElementById('logoutBtnMobile')?.addEventListener('click', function() {
+  if (confirm('Logout from IndiaTour?')) {
+    window.location.href = '/logout';
+  }
+});
+
+  </script>
+
+  <script src="{{ url_for('static', filename='js/success-bar.js') }}" defer></script>
+</body>
+
+</html>

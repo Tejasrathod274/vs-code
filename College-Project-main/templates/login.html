@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Travel India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+  <style>
+    /* Divider "or" line */
+.guide-divider {
+  text-align: center;
+  margin: 28px 0 18px;
+  font-size: 13px;
+  color: #94a3b8;
+  position: relative;
+}
+
+.guide-divider::before,
+.guide-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.guide-divider::before { left: 0; }
+.guide-divider::after { right: 0; }
+
+/* Guide box */
+.guide-login-box {
+  background: linear-gradient(145deg, #0f172a, #111c3a);
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  color: #e2e8f0;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.4);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: 0.3s ease;
+}
+
+.guide-login-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+}
+
+/* Heading */
+.guide-login-box h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.guide-login-box h3 i {
+  color: #facc15;
+  margin-right: 6px;
+}
+
+/* Subtitle text */
+.guide-login-box p {
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-bottom: 16px;
+}
+
+/* Guide login button */
+.guide-login-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #facc15, #eab308);
+  color: #0f172a;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.guide-login-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Register hint */
+
+
+.guide-register-hint{
+   font-size: 12px;
+  margin-top: 14px;
+  color: #94a3b8;
+}
+
+.guide-register-hint a {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.guide-register-hint a:hover {
+  text-decoration: underline;
+}
+
+  </style>
+</head>
+<body class="login-page">
+  <div class="login-overlay"></div>
+  <div class="login-wrapper">
+    <a href="{{ url_for('index') }}" class="login-back"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    <div class="login-box">
+      <div class="login-logo">Travel<span>India</span></div>
+      <h1>Welcome Back</h1>
+      <p class="login-sub">Sign in to explore destinations, hotels & tours</p>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <p class="flash {{ category }}">{{ msg }}</p>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form id="loginForm" class="login-form" method="post" action="{{ url_for('login') }}">
+        <input type="hidden" name="next" value="{{ next_url or '' }}">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="login-submit">Sign In</button>
+      </form>
+      <p class="login-hint">Demo: demo@example.com / demo123 — or <a href="{{ url_for('register') }}">Register</a></p>
+    </div>
+
+    <!-- GUIDE LOGIN OPTION -->
+    <div class="guide-login-section">
+      <div class="guide-divider">or</div>
+      <div class="guide-login-box">
+        <h3><i class="fas fa-passport"></i> Are you a Tour Guide?</h3>
+        <p>Manage your tours and bookings</p>
+        <a href="{{ url_for('guide_login') }}" class="guide-login-btn">Sign In as Guide</a>
+        <p class="guide-register-hint">New guide? <a href="{{ url_for('guide_register') }}">Register here</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

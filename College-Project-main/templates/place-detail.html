@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ place_name }} | {{ dest_name }} | Travel India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/place-detail.css') }}">
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/place-detail.js') }}" defer></script>
+</head>
+<body class="has-navbar">
+  <nav class="navbar">
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </div>
+    <a href="{{ url_for('index') }}" class="logo">Travel<span>India</span></a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}#home">Home</a>
+      <a href="{{ url_for('index') }}#destinations">Destinations</a>
+      <a href="{{ url_for('more_places') }}">More Places</a>
+      <a href="{{ url_for('index') }}#about">About</a>
+      <!-- Mobile Back Button -->
+      <a href="{{ url_for('destination', name=dest_name) }}" class="nav-login" id="mobileNavLogin">Back</a>
+    </div>
+    <div class="nav-right">
+      <a href="{{ url_for('destination', name=dest_name) }}" class="nav-login">Back</a>
+    </div>
+  </nav>
+
+  <main class="destination-main place-detail-main">
+    <div class="breadcrumb">
+      <a href="{{ url_for('index') }}">Home</a>
+      <span class="sep">/</span>
+      <a href="{{ url_for('destination', name=dest_name) }}" id="breadcrumbDest">{{ dest_name }}</a>
+      <span class="sep">/</span>
+      <span id="breadcrumbPlace">{{ place_name }}</span>
+    </div>
+    <h1 class="destination-title reveal" id="placeTitle">{{ place_name }}</h1>
+    <p class="destination-desc reveal" id="placeSubtitle"></p>
+
+    <section class="dest-hero reveal" id="placeHero">
+      <div class="dest-hero-image" id="placeHeroImage"></div>
+      <div class="dest-hero-text">
+        <h2>About {{ place_name }}</h2>
+        <p class="about-dest-paragraph" id="placeAboutParagraph"></p>
+      </div>
+    </section>
+
+    <section class="dest-section" id="spotsSection">
+      <h2><i class="fas fa-map-marker-alt"></i> Places to Visit in {{ place_name }}</h2>
+      <div class="dest-cards" id="spotsContainer"></div>
+    </section>
+
+    <section class="dest-section" id="hotelsSection">
+      <h2><i class="fas fa-hotel"></i> Hotels in {{ place_name }}</h2>
+      <div class="dest-cards" id="hotelsContainer"></div>
+    </section>
+
+    <section class="dest-section" id="restaurantsSection">
+      <h2><i class="fas fa-utensils"></i> Famous Restaurants in {{ place_name }}</h2>
+      <div class="dest-cards" id="restaurantsContainer"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <a href="{{ url_for('destination', name=dest_name) }}">← Back to {{ dest_name }}</a> &nbsp;|&nbsp; © 2026 TravelIndia. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/destination-data.js') }}"></script>
+  <script>
+    var STATIC_BASE = "{{ static_base }}";
+    var destName = "{{ dest_name }}";
+    var placeName = "{{ place_name }}";
+    var destKey = destName.toLowerCase().trim();
+    var placeKey = typeof getPlaceKey === 'function' ? getPlaceKey(placeName) : placeName.toLowerCase().trim();
+
+    var destData = window.DESTINATION_DATA && window.DESTINATION_DATA[destKey];
+    var placeDetails = window.PLACE_DETAILS && window.PLACE_DETAILS[destKey] && window.PLACE_DETAILS[destKey][placeKey];
+
+    var data = placeDetails || {};
+    if (!data.aboutParagraph && destData && destData.places) {
+      var getKey = typeof getPlaceKey === 'function' ? getPlaceKey : function(n) { return (n || '').toLowerCase().trim(); };
+      var pl = destData.places.find(function(p) { return getKey(p.name) === placeKey || (p.name || '').toLowerCase() === placeKey; });
+      if (pl) data.aboutParagraph = pl.description;
+    }
+    if (!data.heroImage && destData) data.heroImage = destData.heroImage || (destData.places && destData.places[0] && destData.places[0].image) || 'images/kerala.jpg';
+    if (!data.spotsToVisit) data.spotsToVisit = [];
+    if (!data.hotels && destData) data.hotels = destData.hotels || [];
+    if (!data.restaurants && destData) data.restaurants = destData.restaurants || [];
+
+    function fixImg(path) {
+      return path && STATIC_BASE ? STATIC_BASE + path : path || '';
+    }
+
+    document.getElementById('placeSubtitle').textContent = 'Hotels, famous restaurants and places to visit in ' + placeName + '.';
+    document.getElementById('placeAboutParagraph').textContent = data.aboutParagraph || 'A wonderful place to explore in ' + destName + '.';
+
+    var heroEl = document.getElementById('placeHeroImage');
+    if (data.heroImage && heroEl) heroEl.style.backgroundImage = 'url(' + fixImg(data.heroImage) + ')';
+
+function renderCards(containerId, items, type) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (!items || !items.length) {
+    container.innerHTML = '<p class="no-items">No items to show.</p>';
+    return;
+  }
+
+  container.innerHTML = items.map(function(item) {
+    var icon = type === 'hotel' ? 'hotel' : type === 'restaurant' ? 'utensils' : 'image';
+
+    var img = item.image
+      ? '<img src="' + fixImg(item.image) + '" alt="' + item.name + '">'
+      : '<div class="card-placeholder"><i class="fas fa-' + icon + '"></i></div>';
+
+    var info = (type === 'hotel' && item.price)
+      ? '<p class="info-text">' + item.price + '</p>'
+      : (type === 'restaurant' && item.cuisine)
+      ? '<p class="info-text">' + item.cuisine + '</p>'
+      : '';
+
+    return '<div class="card reveal">' +
+             img +
+             '<div class="card-content">' +
+               '<h3>' + item.name + '</h3>' +
+               '<p>' + item.description + '</p>' +
+               info +
+             '</div>' +
+           '</div>';
+  }).join('');
+}
+
+    renderCards('spotsContainer', data.spotsToVisit, 'spot');
+    renderCards('hotelsContainer', data.hotels, 'hotel');
+    renderCards('restaurantsContainer', data.restaurants, 'restaurant');
+
+    if (!data.spotsToVisit || !data.spotsToVisit.length) {
+      var sec = document.getElementById('spotsSection');
+      if (sec) sec.style.display = 'none';
+    }
+    if (!data.hotels || !data.hotels.length) {
+      var hsec = document.getElementById('hotelsSection');
+      if (hsec) hsec.style.display = 'none';
+    }
+    if (!data.restaurants || !data.restaurants.length) {
+      var rsec = document.getElementById('restaurantsSection');
+      if (rsec) rsec.style.display = 'none';
+    }
+
+    setTimeout(function() {
+      document.querySelectorAll('.place-detail-main .reveal').forEach(function(el) { el.classList.add('active'); });
+    }, 150);
+  </script>
+  <script src="{{ url_for('static', filename='js/success-bar.js') }}" defer></script>
+</body>
+</html>
